@@ -271,7 +271,8 @@ export const getStudentStats = async (userId) => {
             WHERE type = 'Borrow'
             AND status = 'Approved'
             AND return_date IS NULL
-        `),
+            AND user_id = $1
+        `,[userId]),
 
         // Active borrows this month
         db.query(`
@@ -280,7 +281,8 @@ export const getStudentStats = async (userId) => {
             WHERE approval_date IS NOT NULL
             AND DATE_TRUNC('month', request_date) =
                 DATE_TRUNC('month', CURRENT_DATE)
-        `),
+            AND user_id = $1     
+        `,[userId]),
 
         // Active borrows last month
         db.query(`
@@ -289,14 +291,16 @@ export const getStudentStats = async (userId) => {
             WHERE approval_date IS NOT NULL
             AND DATE_TRUNC('month', request_date) =
                 DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')
-        `),
+            AND user_id = $1    
+        `,[userId]),
 
         // Completed returns total
         db.query(`
             SELECT COUNT(*) AS count
             FROM transactions
             WHERE status = 'Completed'
-        `),
+            AND user_id = $1 
+        `,[userId]),
 
         // Completed returns this month
         db.query(`
@@ -305,7 +309,8 @@ export const getStudentStats = async (userId) => {
             WHERE status = 'Completed'
             AND DATE_TRUNC('month', return_date) =
                 DATE_TRUNC('month', CURRENT_DATE)
-        `),
+            AND user_id = $1    
+        `,[userId]),
 
         // Completed returns last month
         db.query(`
@@ -314,7 +319,8 @@ export const getStudentStats = async (userId) => {
             WHERE status = 'Completed'
             AND DATE_TRUNC('month', return_date) =
                 DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')
-        `),
+            AND user_id = $1    
+        `,[userId]),
 
         // Available equipment
         db.query(`

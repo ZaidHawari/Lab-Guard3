@@ -15,7 +15,7 @@ import {
 export const getStudentDashboardData = async (req, res) => {
     try {
 
-        const studentStats = await getStudentStats(req.userId)
+        const studentStats = await getStudentStats(req.user.id)
 
         const weeklyActivity = await getWeeklyRequestActivityData();
 

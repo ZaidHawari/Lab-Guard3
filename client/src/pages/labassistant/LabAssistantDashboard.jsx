@@ -165,7 +165,10 @@ export function LabAssistantDashboard() {
       <AddEquipmentModal
         open={showAddModal}
         onClose={() => setShowAddModal(false)}
-        onAdd={newEq => setEquipment(prev => [newEq, ...prev])}
+        onAdd={(newEq) => {
+          fetchEquipment()
+          fetchStats();
+        }}
       />
 
       {/* Header */}
