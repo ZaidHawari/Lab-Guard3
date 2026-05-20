@@ -10,10 +10,17 @@
 ## Installation
 
 ### 1. Database Setup
+Open a terminal and run the following command to restore the database:
 
-Open pgAdmin 4, copy the SQL from [database.sql](https://github.com/ZaidHawari/Lab-Guard3/blob/main/database/database.sql), and run it.
+```bash
+psql -U postgres -d postgres -f database/database.sql
+```
 
-You can also copy and run the SQL queries from [data.txt](https://github.com/ZaidHawari/Lab-Guard3/blob/main/database/data.txt) to populate the database with sample data.
+> ⚠️ Make sure PostgreSQL is installed and `psql` is added to your system PATH.
+
+This will automatically create and populate the `labguard` database from the SQL dump.
+
+After creating the database, You can copy and run the SQL queries from [data.txt](https://github.com/ZaidHawari/Lab-Guard3/blob/main/database/data.txt) to populate the database with sample data.
 
 ---
 
