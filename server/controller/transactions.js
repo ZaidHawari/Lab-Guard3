@@ -208,9 +208,6 @@ export const addTransaction = async (req, res) => {
             equipmentName: equipment.name
         })
 
-        req.io.to("instructors")
-            .emit("pending_approvals", log);
-
         res.status(201).json({
             message: "Borrow request submitted successfully",
             transactionId: result.rows[0].id
