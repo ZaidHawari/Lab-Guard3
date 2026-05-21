@@ -6,9 +6,24 @@ import {LOG_ACTIONS} from "../constants/logActions.js";
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({
+            error: "Email and password are required"
+        });
+    }
+
+    if (typeof email !== "string" || typeof password !== "string") {
+        return res.status(400).json({
+            error: "Invalid field types"
+        });
+    }
+    const emailNormalized = email.toLowerCase().trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailNormalized)) {
+        return res.status(400).json({error: "Invalid email format"});
+    }
 
     try {
-        const emailNormalized = email.toLowerCase().trim();
         const {rows} = await db.query(
             "SELECT * FROM users WHERE email = $1",
             [emailNormalized]
