@@ -40,14 +40,13 @@ export async function sendNotification({
             read: false,
             createdAt: new Date()
         };
-
-        /**
-         * Emit realtime notification
-         */
-        io.to(`user:${userId}`).emit(
-            "notification",
-            notification
-        );
+        if (io) {
+            //Emit realtime notification
+            io.to(`user:${userId}`).emit(
+                "notification",
+                notification
+            );
+        }
 
         return notification;
 
