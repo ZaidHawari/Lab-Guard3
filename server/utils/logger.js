@@ -18,18 +18,18 @@ export const log = async (io,action,userId=null,details={}) => {
         const log = {
             id: result.rows[0].id,
             userId,
-            user: user.name,
+            user: user?.name,
             action: action.code,
             status: action.status,
             message: LogMap[action.code]?.format(details) || action.code,
             timestamp: new Date(),
         };
 
-        /**
-         * Emit realtime logs
-         */
-        io.to("admins")
-            .emit("system_logs", log);
+        if (io) {
+            // Emit realtime logs
+            io.to("admins")
+                .emit("system_logs", log);
+        }
     } catch (err) {
         console.error("Log failed:", err.message)
     }
