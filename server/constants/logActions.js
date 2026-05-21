@@ -90,8 +90,24 @@ export const LOG_ACTIONS = {
     UPDATE_EQUIPMENT: {
         code: "UPDATE_EQUIPMENT",
         status: SUCCESS,
-        format: (d) =>
-            `Updated ${d.equipmentName} status to ${d.newStatus}`
+        format: (d) => {
+
+            const changes = [];
+
+            if (d.newStatus !== undefined) {
+                changes.push(`status to ${d.newStatus}`);
+            }
+
+            if (d.totalQuantity !== undefined) {
+                changes.push(`total quantity to ${d.totalQuantity}`);
+            }
+
+            if (d.availableQuantity !== undefined) {
+                changes.push(`available quantity to ${d.availableQuantity}`);
+            }
+
+            return `Updated ${d.equipmentName} ${changes.join(", ")}`;
+        }
     },
 };
 

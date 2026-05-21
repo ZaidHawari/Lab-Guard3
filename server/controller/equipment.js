@@ -232,41 +232,49 @@ export const addEquipment = async (req, res) => {
 
 export const updateEquipment = async (req, res) => {
 
-    const { id, status } = req.body;
+    const { id, status, totalQuantity, availableQuantity } = req.body;
 
-    if (!id || !status) {
-        return res.status(400).json({
-            error: "Missing Required Fields"
-        });
+    if (!id) {
+        return res.status(400).json({error: "Missing id field"});
     }
 
     try {
-
         const result = await db.query(
-            "UPDATE equipment SET status = $1 WHERE id = $2 RETURNING id,name",
-            [status, id]
+            "SELECT * FROM equipment WHERE id = $1", [id]
         );
 
-        if (result.rowCount === 0) {
-            return res.status(404).json({
-                error: "Equipment not found"
-            });
+        const equipment = result.rows[0];
+
+        if (!equipment) {
+            return res.status(404).json({error: "Equipment not found"});
         }
-        log(req.io,LOG_ACTIONS.UPDATE_EQUIPMENT,req.user.id,{
-            id: result.rows[0].id,
-            equipmentName: result.rows[0].name,
-            newStatus: status
-        })
-        res.json({
-            message: "Equipment updated successfully"
-        });
 
+        const updatedStatus = status ?? equipment.status;
+        const updatedTotalQty = totalQuantity ?? equipment.total_quantity;
+        const updatedAvailableQty = availableQuantity ?? equipment.available_quantity;
+
+        if (updatedTotalQty < 0 || updatedAvailableQty < 0 || updatedAvailableQty > updatedTotalQty)
+        {
+            return res.status(400).json({error: "Invalid quantity values"});
+        }
+
+        const updateResult = await db.query(
+            `UPDATE equipment SET status = $1, total_quantity = $2, available_quantity = $3
+             WHERE id = $4
+             RETURNING id, name`,
+            [updatedStatus, updatedTotalQty, updatedAvailableQty, id]
+        );
+
+        log(req.io, LOG_ACTIONS.UPDATE_EQUIPMENT, req.user.id, {
+            id: updateResult.rows[0].id,
+            equipmentName: updateResult.rows[0].name,
+            newStatus: updatedStatus,
+            totalQuantity: updatedTotalQty,
+            availableQuantity: updatedAvailableQty
+        });
+        res.json({message: "Equipment updated successfully"});
     } catch (err) {
-
-        res.status(500).json({
-            error: err.message
-        });
-
+        res.status(500).json({error: err.message});
     }
 };
 
