@@ -162,7 +162,13 @@ export const addTransaction = async (req, res) => {
                 error: "You already have an active request for this equipment"
             });
         }
-
+        const date = new Date(expectedReturnDate);
+        const actualExpectedReturnDate = new Date(Date.UTC(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            14, 0, 0, 0 //5 PM Jordan Time converted to UTC
+        ));
         const result = await db.query(
             `
             INSERT INTO transactions (
@@ -193,7 +199,7 @@ export const addTransaction = async (req, res) => {
                 quantity,
                 purpose || null,
                 notes || null,
-                expectedReturnDate || null
+                actualExpectedReturnDate || null
             ]
         );
 
