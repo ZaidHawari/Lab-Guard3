@@ -326,7 +326,7 @@ export const getStudentStats = async (userId) => {
         db.query(`
             SELECT COUNT(*) AS count
             FROM equipment
-            WHERE available_quantity > 0
+            WHERE status='Available' AND available_quantity > 0
         `),
 
         // Pending requests for current user
@@ -387,8 +387,6 @@ export const getStudentStats = async (userId) => {
             changePercent: 0,
             isPositive: true
         },
-
-        comparisonPeriod: "vs last month"
     };
 };
 
