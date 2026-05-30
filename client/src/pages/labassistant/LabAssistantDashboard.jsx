@@ -90,8 +90,7 @@ export function LabAssistantDashboard() {
       return;
     }
     try {
-      await api.patch("/equipment/update", {
-        id: quantityEquipment.id,
+      await api.patch(`/equipment/${quantityEquipment.id}`, {
         totalQuantity: newTotalQty,
         availableQuantity: newTotalQty - currentlyInUse,
       });
@@ -119,8 +118,7 @@ export function LabAssistantDashboard() {
       return;
     }
     try {
-      await api.patch("/equipment/update", {
-        id: selectedEquipment.id,
+      await api.patch(`/equipment/${selectedEquipment.id}`, {
         status: newStatus
       })
       await fetchStats()

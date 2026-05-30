@@ -221,7 +221,6 @@ export const addEquipment = async (req, res) => {
         });
 
     } catch (err) {
-
         res.status(500).json({
             error: err.message
         });
@@ -231,8 +230,8 @@ export const addEquipment = async (req, res) => {
 
 
 export const updateEquipment = async (req, res) => {
-
-    const { id, status, totalQuantity, availableQuantity } = req.body;
+    const {id} = req.params
+    const {status, totalQuantity, availableQuantity } = req.body;
 
     if (!id) {
         return res.status(400).json({error: "Missing id field"});
@@ -250,10 +249,13 @@ export const updateEquipment = async (req, res) => {
         }
 
         const updatedStatus = status ?? equipment.status;
+        if (!Object.values(EQUIPMENT_STATUS).includes(updatedStatus)){
+            return res.status(400).json({error: "Invalid equipment status"})
+        }
         const updatedTotalQty = totalQuantity ?? equipment.total_quantity;
         const updatedAvailableQty = availableQuantity ?? equipment.available_quantity;
 
-        if (updatedTotalQty < 0 || updatedAvailableQty < 0 || updatedAvailableQty > updatedTotalQty)
+        if (updatedTotalQty < 0 || updatedAvailableQty < 0 || isNaN(updatedTotalQty) || isNaN(updatedAvailableQty) || updatedAvailableQty > updatedTotalQty)
         {
             return res.status(400).json({error: "Invalid quantity values"});
         }
