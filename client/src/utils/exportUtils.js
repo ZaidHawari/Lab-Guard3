@@ -30,7 +30,7 @@ function strokeRect(doc, x, y, w, h, color, lw = 0.2) {
 }
 
 /**
- * Export transactions to a properly formatted PDF (no external plugins)
+ * Export transactions to a properly formatted PDF
  */
 export function exportToPDF(transactions, fileName = 'transactions.pdf', title = 'Transaction Report') {
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
@@ -230,7 +230,6 @@ export function exportToPDF(transactions, fileName = 'transactions.pdf', title =
 export function exportToExcel(transactions, fileName = 'transactions.xlsx', title = 'Transaction Report') {
   const wb = XLSX.utils.book_new();
 
-  // Use array-of-arrays so column order is always guaranteed
   const headers = [
     'Date', 'Equipment', 'Type', 'Status',
     'Student Name', 'Uni Number', 'Quantity', 'Purpose',

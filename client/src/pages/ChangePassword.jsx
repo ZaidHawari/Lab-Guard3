@@ -83,13 +83,11 @@ export function ChangePassword() {
 
     setLoading(true);
     try {
-      // Call real API to change password
       await api.post("/users/me/change-password", {
         currentPassword: form.current,
         newPassword: form.newPass,
         confirmPassword: form.confirm
       });
-      // Clear mustChangePassword flag in session so banner disappears
       setUserSession({ ...user, passwordChanged: true, mustChangePassword: false });
       setSuccess(true);
       toast.success("Password changed successfully!");

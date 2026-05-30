@@ -115,15 +115,9 @@ export function TransactionHistory() {
     setLoading(true);
     try {
       const res = await api.get("/users/me/transactions");
-      // Backend may return array directly or nested under a key
       const data = Array.isArray(res.data)
         ? res.data
         : res.data.transactions || res.data.data || [];
-      // Log raw first record so we can see the exact field names from backend
-      if (data.length > 0) {
-        console.log("[TransactionHistory] Raw field names from backend:", Object.keys(data[0]));
-        console.log("[TransactionHistory] First record sample:", data[0]);
-      }
       setTransactions(data);
     } catch (err) {
       console.error("Transaction History error:", err);
@@ -137,7 +131,6 @@ export function TransactionHistory() {
     fetchTransactions();
   }, []);
 
-  // Normalize field names — backend may use snake_case or camelCase
   const normalize = (txn) => ({
     id: txn.id || txn._id,
     equipmentName: txn.equipmentName || txn.equipment_name || txn.equipment?.name || "—",

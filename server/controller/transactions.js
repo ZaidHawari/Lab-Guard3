@@ -336,11 +336,9 @@ export const getMyTransactions = async (req, res) => {
         let params = [];
         let conditions = [];
 
-        // Always restrict to current user
         conditions.push(`t.user_id = $${params.length + 1}`);
         params.push(userId);
 
-        // Optional filters
         if (type) {
             conditions.push(`t.type = $${params.length + 1}`);
             params.push(type);

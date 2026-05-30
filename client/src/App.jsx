@@ -16,7 +16,7 @@ import { NotFound } from "@/pages/NotFound";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import {getUserSession} from "@/utils/auth.js";
 
-// Smart root index: redirect non-student roles to their home page
+// redirect non-student roles to their home page
 function RootIndex() {
   const user = getUserSession()
   if (!user) return <Navigate to="/login" replace />;
