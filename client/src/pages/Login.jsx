@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { FlaskConical, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,11 +16,25 @@ const DEMO_ACCOUNTS = [
 
 export function Login() {
   const navigate = useNavigate();
+  const [loginStats,setLoginStats] = useState([])
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(()=>{
+    const fetchLoginStats = async () => {
+      try {
+          const res = await api.get("/dashboard/login")
+          setLoginStats(res.data)
+        console.log(res)
+      }catch (err) {
+          console.log("Error Fetching Login Stats",err.message)
+      }
+    }
+    fetchLoginStats()
+  },[])
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -105,11 +119,11 @@ export function Login() {
 
           <div className="relative space-y-3">
             {[
-              { num: "250+", label: "Equipment Items" },
-              { num: "1,200+", label: "Transactions Processed" },
+              { num: (loginStats.equipmentCount || "0") + "+", label: "Equipment Items" },
+              { num: (loginStats.transactionsCount || "0") + "+", label: "Transactions Processed" },
               { num: "99.8%", label: "System Uptime" },
-            ].map(stat => (
-                <div key={stat.num} className="flex items-center gap-4">
+            ].map((stat, index) => (
+                <div key={index} className="flex items-center gap-4">
                   <span className="text-2xl font-bold text-[#e9333f]">{stat.num}</span>
                   <span className="text-gray-400 text-sm">{stat.label}</span>
                 </div>

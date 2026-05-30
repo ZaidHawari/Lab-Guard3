@@ -9,8 +9,18 @@ import {
     getPeakRequestHoursData,
     getRequestStatusData, getUserDistributionData,
     getWeeklyRequestActivityData,
-    getWeeklyRequestApprovalActivityData, getStudentStats
+    getWeeklyRequestApprovalActivityData, getStudentStats, getStudentsComplianceMetric
 } from "../services/analytics.js";
+
+export const getLoginDashboardData = async(req,res)=> {
+    try{
+        const equipmentRes = await db.query("SELECT COUNT(*) AS count FROM equipment");
+        const txnRes = await db.query("SELECT COUNT(*) AS count FROM transactions");
+        res.json({equipmentCount: Number(equipmentRes.rows[0].count), transactionsCount: Number(txnRes.rows[0].count)});
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 
 export const getStudentDashboardData = async (req, res) => {
     try {
@@ -79,7 +89,7 @@ export const getInstructorDashboardData = async (req, res) => {
         const equipmentUsage = await getMostBorrowedEquipmentData();
 
         const equipmentStatus = await getEquipmentByStatusData();
-
+        const studentComplianceMetrics = await getStudentsComplianceMetric();
         res.json({
             totalStudents: Number(students.count),
             instructorStats,
@@ -87,8 +97,8 @@ export const getInstructorDashboardData = async (req, res) => {
             peakRequestHours,
             equipmentUsage,
             equipmentStatus,
+            studentComplianceMetrics
         });
-
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

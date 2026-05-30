@@ -1,5 +1,113 @@
 import {db} from "../db/connection.js";
 import { calculatePercentageChange } from "../utils/stats.js";
+
+
+export const getStudentsComplianceMetric = async () => {
+
+    const { rows } = await db.query(`
+        SELECT
+            COUNT(*) AS total_requests,
+
+            COUNT(*) FILTER (
+                WHERE status = 'Approved' OR status='Completed'
+            ) AS approved_requests,
+
+            COUNT(*) FILTER (
+                WHERE status = 'Completed'
+            ) AS completed_returns,
+
+            COUNT(*) FILTER (
+                WHERE status = 'Completed'
+                AND return_date <= expected_return_date
+            ) AS on_time_returns,
+
+            COUNT(*) FILTER (
+                WHERE status = 'Completed'
+                AND return_date > expected_return_date
+            ) AS overdue_returns,
+
+            COUNT(*) FILTER (
+                WHERE rd.condition_type IN ('excellent', 'good')
+            ) AS good_condition_returns
+
+        FROM transactions t
+        LEFT JOIN return_details rd
+            ON rd.transaction_id = t.id
+    `);
+
+    const stats = rows[0];
+    const totalRequests =
+        Number(stats.total_requests);
+
+    const approvedRequests =
+        Number(stats.approved_requests);
+
+    const completedReturns =
+        Number(stats.completed_returns);
+
+    const onTimeReturns =
+        Number(stats.on_time_returns);
+
+    const overdueReturns =
+        Number(stats.overdue_returns);
+
+    const goodConditionReturns =
+        Number(stats.good_condition_returns);
+    const approvedRate =
+        totalRequests === 0
+            ? 100
+            : Math.round(
+                approvedRequests / totalRequests * 100
+            );
+
+    const onTimeRate =
+        completedReturns === 0
+            ? 100
+            : Math.round(
+                onTimeReturns / completedReturns * 100
+            );
+
+    const equipmentCare =
+        completedReturns === 0
+            ? 100
+            : Math.round(
+                goodConditionReturns /
+                completedReturns * 100
+            );
+
+    const compliance =
+        Math.max(
+            0,
+            100 - (overdueReturns * 10)
+        );
+
+    const requestsScore =
+        Math.min(totalRequests * 5, 100);
+
+    return [
+        {
+            subject: "Requests",
+            A: requestsScore
+        },
+        {
+            subject: "On-time Returns",
+            A: onTimeRate
+        },
+        {
+            subject: "Approved Rate",
+            A: approvedRate
+        },
+        {
+            subject: "Equipment Care",
+            A: equipmentCare
+        },
+        {
+            subject: "Compliance",
+            A: compliance
+        }
+    ];
+};
+
 export const getEquipmentByStatusData = async () => {
     const { rows } = await db.query(`
         SELECT 

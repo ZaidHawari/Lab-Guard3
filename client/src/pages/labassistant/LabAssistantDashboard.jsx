@@ -72,7 +72,9 @@ export function LabAssistantDashboard() {
       } else if (status === 403) {
         toast.error("You don't have permission to delete equipment.");
       } else {
-        toast.error(`Failed to delete "${name}". ${err?.response?.data?.message || err.message || ""}`);
+        toast.error(`Failed to delete "${name}"`,{
+          description: err?.response?.data?.error || err?.response?.data?.message || ""
+        });
       }
       console.error("Delete equipment error:", err?.response?.data || err);
     }

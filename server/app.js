@@ -15,16 +15,19 @@ import categoriesRoute from "./router/categories.js";
 
 import { authMiddleware } from "./middleware/auth.js";
 import { CheckPasswordChange } from "./middleware/checkPasswordChange.js";
+import {getLoginDashboardData} from "./controller/dashboard.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
+//public routes
 app.use("/api/auth", authRoutes);
+app.use("/api/dashboard/login",getLoginDashboardData)
 
+//protected routes
 app.use("/api", authMiddleware, CheckPasswordChange);
-
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/equipment", equipmentRoutes);
 app.use("/api/transactions", transactionsRoute);

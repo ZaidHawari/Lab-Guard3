@@ -19,25 +19,8 @@ import {
   Radar, PolarGrid, PolarAngleAxis
 } from "recharts";
 import api from "@/api.js";
-import {socket} from "@/socket/socket.js";
 
 const COLORS = ["#e9333f", "#3498db", "#27ae60", "#f39c12", "#9b59b6"];
-
-const purposeData = [
-  { name: "Lab Assignment", value: 38 },
-  { name: "Course Project", value: 28 },
-  { name: "Research", value: 18 },
-  { name: "Senior Project", value: 12 },
-  { name: "Personal", value: 4 },
-];
-
-const studentActivityRadar = [
-  { subject: "Requests", A: 80 },
-  { subject: "On-time Returns", A: 92 },
-  { subject: "Approved Rate", A: 75 },
-  { subject: "Equipment Care", A: 88 },
-  { subject: "Compliance", A: 95 },
-];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -379,6 +362,7 @@ export function InstructorDashboard() {
   const equipmentUsage = stats?.equipmentUsage || []
   const peakRequestHours = stats?.peakRequestHours || []
   const weeklyData = stats?.weeklyData || []
+  const studentActivityRadar = stats?.studentComplianceMetrics || []
   const fetchStats = async () => {
     try {
       const res = await api.get("/dashboard/instructor")
