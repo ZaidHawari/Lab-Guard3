@@ -22,7 +22,7 @@ export const getStudentDashboardData = async (req, res) => {
         const equipmentByCategory = await getEquipmentByCategoryData();
 
         res.json({
-            studentStats,
+            ...studentStats,
             weeklyActivity,
             equipmentByCategory
         });

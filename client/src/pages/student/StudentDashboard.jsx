@@ -56,7 +56,6 @@ export function StudentDashboard() {
   }, []);
   const navigate = useNavigate();
   // Calculate statistics
-  const studentStats = stats?.studentStats
   const pendingRequests = stats?.pendingRequests || 0;
   const completedReturnsStats = stats?.completedReturnsStats;
   const availableEquipment = stats?.availableEquipment || 0;
@@ -75,27 +74,27 @@ export function StudentDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Active Borrows"
-          value={studentStats?.activeBorrows.count ?? 0}
+          value={stats?.activeBorrows.count ?? 0}
           icon={Package}
           color="#e9333f"
-          trend={{ value: String(studentStats?.activeBorrows.changePercent ?? 0) + "%", isPositive: studentStats?.activeBorrows.isPositive ?? false }}
+          trend={{ value: String(stats?.activeBorrows.changePercent ?? 0) + "%", isPositive: stats?.activeBorrows.isPositive ?? false }}
         />
         <StatCard
           title="Pending Requests"
-          value={studentStats?.pendingRequests.count ?? 0}
+          value={stats?.pendingRequests.count ?? 0}
           icon={Clock}
           color="#f39c12"
         />
         <StatCard
           title="Completed Returns"
-          value={studentStats?.completedReturns.count ?? 0}
+          value={stats?.completedReturns.count ?? 0}
           icon={CheckCircle}
           color="#27ae60"
-          trend={{ value: String(studentStats?.completedReturns.changePercent ?? 0) + "%", isPositive: studentStats?.completedReturns.isPositive ?? false }}
+          trend={{ value: String(stats?.completedReturns.changePercent ?? 0) + "%", isPositive: stats?.completedReturns.isPositive ?? false }}
         />
         <StatCard
           title="Available Equipment"
-          value={studentStats?.availableEquipment.count ?? 0}
+          value={stats?.availableEquipment.count ?? 0}
           icon={TrendingUp}
           color="#3498db"
         />
