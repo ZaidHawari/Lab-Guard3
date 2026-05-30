@@ -292,7 +292,12 @@ export const getTransactions = async (req, res) => {
 
         query += ` ORDER BY t.${orderColumn} DESC`;
 
-        const limitValue = parseLimit(limit);
+        let limitValue;
+        try {
+            limitValue = parseLimit(limit);
+        } catch (err) {
+            return res.status(400).json({error: err.message});
+        }
 
         if (limitValue !== null) {
             params.push(limitValue);
@@ -383,7 +388,12 @@ export const getMyTransactions = async (req, res) => {
             ORDER BY t.request_date DESC
         `;
 
-        const limitValue = parseLimit(limit);
+        let limitValue;
+        try {
+            limitValue = parseLimit(limit);
+        } catch (err) {
+            return res.status(400).json({error: err.message});
+        }
 
         if (limitValue !== null) {
             params.push(limitValue);
