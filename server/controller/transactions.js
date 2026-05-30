@@ -6,6 +6,7 @@ import {NOTIFICATION_TYPES} from "../constants/notificationTypes.js";
 import {EQUIPMENT_STATUS} from "../constants/equipmentStatus.js";
 import {LOG_ACTIONS} from "../constants/logActions.js";
 import {log} from "../utils/logger.js";
+import {TRANSACTION_STATUS} from "../constants/transactionStatus.js";
 
 export const addTransaction = async (req, res) => {
 
@@ -258,6 +259,9 @@ export const getTransactions = async (req, res) => {
         const params = [];
 
         if (status) {
+            if (!Object.values(TRANSACTION_STATUS).includes(status)){
+                return res.status(400).json({error: "Invalid status"})
+            }
             conditions.push(`t.status = $${params.length + 1}`);
             params.push(status);
         }
@@ -332,6 +336,9 @@ export const getMyTransactions = async (req, res) => {
         }
 
         if (status) {
+            if (!Object.values(TRANSACTION_STATUS).includes(status)){
+                return res.status(400).json({error: "Invalid status"})
+            }
             conditions.push(`t.status = $${params.length + 1}`);
             params.push(status);
         }
