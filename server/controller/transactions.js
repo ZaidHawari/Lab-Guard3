@@ -211,6 +211,19 @@ export const addTransaction = async (req, res) => {
             userId
         });
 
+        const { rows: instructors } = await db.query(`SELECT id FROM users WHERE role = 'instructor'`);
+
+        const instructorIds = instructors.map(u => u.id);
+        const { rows: userRows } = await db.query(`SELECT name FROM users WHERE id = $1`, [userId]);
+        const studentName = userRows[0]?.name || "A student";
+        await sendNotificationToUsers({
+            io: req.io,
+            type: NOTIFICATION_TYPES.INFO,
+            title: "New Borrow Request",
+            message: `${studentName} has submitted a borrow request for ${equipment.name}.`,
+            userIds: instructorIds
+        });
+
         log(req.io,LOG_ACTIONS.BORROW_REQUEST,userId,{
             equipmentName: equipment.name
         })
