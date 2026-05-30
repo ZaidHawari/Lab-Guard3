@@ -396,9 +396,11 @@ export const denyTransaction = async (req, res) => {
 
     const { txnId } = req.params;
     const deniedBy = req.user.id;
-    const { reason } = req.body;
+    const reason = req.body?.reason;
     try {
-
+        if (!reason?.trim()) {
+            return res.status(400).json({error: "Denial reason is required"});
+        }
         const { rows: txnRows } = await db.query(
             `
             SELECT
