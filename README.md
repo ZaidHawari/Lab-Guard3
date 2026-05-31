@@ -397,10 +397,10 @@ After running `data.txt`, the following accounts are available:
 
 | Role | Email | Password |
 |---|---|---|
-| 🛠️ Administrator | admin@htu.edu.jo | Admin@123 |
-| 🏫 Instructor | instructor@htu.edu.jo | Instructor@123 |
-| 🔧 Lab Assistant | labassistant@htu.edu.jo | LabAss@123 |
-| 🎓 Student | student@htu.edu.jo | Student@123 |
+| 🛠️ Administrator | `admin@htu.edu.jo` | `demo1234` |
+| 🏫 Instructor | `instructor@htu.edu.jo` | `demo1234` |
+| 🔧 Lab Assistant | `labassistant@htu.edu.jo` | `demo1234` |
+| 🎓 Student | `student@htu.edu.jo` | `demo1234` |
 
 > 🔐 All sample accounts have `must_change_password = true`. You will be prompted to set a new password on first login before accessing the system.
 
